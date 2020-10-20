@@ -1,0 +1,654 @@
+
+{% extends 'blog/base.html' %}
+<script>
+{% block jquery %}
+    var endpoint = 'api/chart/data/'
+    var labels = []
+    var defaultData = []
+    var stprepdata
+    var sitprepdata
+    var uatprepdata
+    var sttrendlabels = []
+    var sttrendData = []
+    var line
+    var sttrendbkcolor
+    var trendlabel
+
+    $.ajax({
+        method: "GET",
+        url: endpoint,
+
+        success: function (data) {
+            labels = data.defectlabels
+            defaultData = data.defectitems
+            stprepdata = data.stprepitems
+            sitprepdata = data.sitprepitems
+            uatprepdata = data.uatprepitems
+            sttrendlabels = data.sttrenddatelabel
+            sttrendData = data.sttrenditems
+            sttrendbkcolor = ['rgb(14,74,219)', 'rgb(0,135,176)', 'rgb(0,176,18)', 'rgb(176,0,21)']
+            trendlabel = ["Planned", "Executed", "Pass", "Fail"]
+
+            stprepChart()
+            sitprepChart()
+            uatprepChart()
+            defectChart()
+            stexectrendChart()
+            console.log(labels)
+        },
+        error: function (error_data) {
+            console.log("error")
+            console.log(error_data)
+        }
+    })
+
+    function defectChart() {
+          var ctx = document.getElementById("myChart");
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                    label: 'Defect status',
+                    data: defaultData,
+
+                    backgroundColor: [
+                    'rgba(217, 217, 217, 1)',
+                    'rgba(68, 114, 196, 1)',
+                    'rgba(255, 255, 0, 1)',
+                    'rgba(91, 155, 213, 1)',
+                    'rgba(102, 153, 0, 1)',
+                    'rgba(0, 176, 80, 1)',
+                    'rgba(102, 153, 0, 1)',
+                    'rgba(0, 176, 80, 1)',
+                    'rgba(165, 165, 165, 1)',
+                    'rgba(84, 130, 53, 1)',
+                    'rgba(102, 153, 0, 1)',
+                    'rgba(0, 176, 80, 1)',
+                    'rgba(56, 87, 35, 1)',
+                     'rgba(112, 48, 160,1)'
+                    ],
+
+                    borderColor: [
+                    'rgba(217, 217, 217, 1)',
+                    'rgba(68, 114, 196, 1)',
+                    'rgba(255, 255, 0, 1)',
+                    'rgba(91, 155, 213, 1)',
+                    'rgba(102, 153, 0, 1)',
+                    'rgba(0, 176, 80, 1)',
+                    'rgba(102, 153, 0, 1)',
+                    'rgba(0, 176, 80, 1)',
+                    'rgba(165, 165, 165, 1)',
+                    'rgba(84, 130, 53, 1)',
+                    'rgba(102, 153, 0, 1)',
+                    'rgba(0, 176, 80, 1)',
+                    'rgba(56, 87, 35, 1)',
+                    'rgba(112, 48, 160,1)'
+                    ],
+
+                    borderWidth: 1
+
+                    }],
+                },
+                options: {
+                    scales: {
+                     yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                            }
+                        }]
+                    },
+                    title: {
+                        display: false,
+                        text: 'System Test Defect Status'
+                     },
+
+                    legend: {
+                        display: false,
+                        labels: {
+
+                            fontColor: 'rgba(255, 99, 132)'
+                        }
+                    }
+
+                }
+            })
+    }
+
+    function stprepChart() {
+          var ctx = document.getElementById("myChartst");
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ["Test Preparation","Yet to complete" ],
+                    datasets: [{
+                        data: stprepdata,
+                        backgroundColor: ['rgba(17,219,70)', 'rgba(31, 73, 125, 1)']
+                    }]
+                },
+                options: {
+                    title: {
+                        display: false,
+                        text: 'System Test Preparation'
+                    },
+                    legend: {
+                        display: false,
+                        labels: {
+                                 fontColor: 'rgba(255, 99, 132)'
+                        }
+                    }
+                }
+            })
+    }
+
+    function sitprepChart() {
+          var ctx = document.getElementById("myChartsit");
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ["Test Preparation","Yet to complete" ],
+                    datasets: [{
+                        data: sitprepdata,
+                        backgroundColor: ['rgba(17,219,70)', 'rgba(0,135,176)']
+                    }]
+                },
+                options: {
+                    title: {
+                        display: false,
+                        text: 'System Integration Test Preparation'
+                    },
+                    legend: {
+                        display: false,
+                        labels: {
+                                 fontColor: 'rgba(255, 99, 132)'
+                        }
+                    }
+                }
+            })
+    }
+
+    function uatprepChart() {
+          var ctx = document.getElementById("myChartuat");
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ["Test Preparation","Yet to complete" ],
+                    datasets: [{
+                        data: uatprepdata,
+                        backgroundColor: ['rgba(17,219,70)', 'rgba(138,0,176)']
+                    }]
+                },
+                options: {
+                    title: {
+                        display: false,
+                        text: 'User Acceptance Test Preparation'
+                    },
+                    legend: {
+                        display: false,
+                        labels: {
+                                 fontColor: 'rgba(255, 99, 132)'
+                        }
+                    }
+                }
+            })
+    }
+
+    function stexectrendChart() {
+        lineChartData = {};
+        lineChartData.labels = sttrendlabels;
+        lineChartData.datasets = [];
+        for (line = 0; line < sttrendData.length; line++){
+             y = sttrendData[line];
+             lineChartData.datasets.push({}); //create a new line dataset
+             dataset = lineChartData.datasets[line];
+             dataset.data = [];
+             dataset.backgroundColor = sttrendbkcolor[line];
+             dataset.borderColor = sttrendbkcolor[line];
+             dataset.fill = false;
+             dataset.label = trendlabel[line];
+             lineChartData.datasets[line].data = y;
+        }
+
+         var ctx = document.getElementById("stexectrendChart");
+
+           var myChart = new Chart(ctx, {
+                type: 'line',
+                data: lineChartData,
+                options: {
+                    title: {
+                        display: false,
+                        text: 'System Test Execution Trend'
+                    },
+                    legend: {
+                        display: true,
+                        labels: {
+                                 fontColor: 'rgb(12,12,12)'
+                        }
+                    }
+                }
+            })
+    }
+
+{% endblock %}
+</script>
+
+{% block content %}
+
+      <div class="content">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-header bg-warning card-header-icon">
+                  <p class="card-category" style="text-align:center" >In Development</p>
+                  <h3 class="card-title" style="text-align:center">0</h3>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-header bg-success card-header-icon">
+                  <p class="card-category" style="text-align:center">Development Completed</p>
+                  <h3 class="card-title" style="text-align:center">6</h3>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-header bg-primary card-header-icon">
+                  <p class="card-category" style="text-align:center">Ready for Unit Testing</p>
+                  <h3 class="card-title" style="text-align:center">0</h3>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-6">
+              <div class="card card-stats">
+                <div class="card-header bg-light card-header-icon">
+                  <p class="card-category" style="text-align:center" >Unit Testing Completed</p>
+                  <h3 class="card-title" style="text-align:center">6</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card card-chart">
+                <div class="card-header  bg-success">
+                  <h6 class="card-title">System Test Preparation</h6>
+                </div>
+                <div class="card-body">
+                   <canvas id="myChartst" ></canvas>
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <p class="card-category">
+                      <span class="text-success"> {{stpercentage}}% </span> {% if stpercentage == 100 %} Complete {% else %} in-progres {% endif %}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card card-chart">
+                <div class="card-header bg-info">
+                  <h6 class="card-title">System integration Test Preparation</h6>
+                </div>
+                <div class="card-body">
+                  <canvas id="myChartsit"></canvas>
+
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                    <p class="card-category">
+                    <span class="text-success"> {{sitpercentage}}% </span> {% if sitpercentage == 100 %} Complete {% else %} in-progres {% endif %}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card card-chart">
+                <div class="card-header bg-danger">
+                  <h6 class="card-title">User Acceptance Test Preparation</h6>
+                </div>
+              <div class="card-body">
+                  <canvas id="myChartuat" ></canvas>
+
+                </div>
+                <div class="card-footer">
+                  <div class="stats">
+                      <span class="text-success"> {{uatpercentage}}% </span> {% if uatpercentage == 100 %} Complete {% else %} in-progres {% endif %}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card card-chart">
+                <div class="card-header">
+                  <canvas id="myChart" ></canvas>
+                </div>
+                <div class="card-body">
+                  <h4 class="card-title">System Test Defect Status</h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card card-chart">
+                <div class="card-header">
+                  <canvas id="stexectrendChart"></canvas>
+                </div>
+                <div class="card-body">
+                  <h4 class="card-title">System Test Execution Trend</h4>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-lg-6 col-md-12">
+              <div class="card">
+                <div class="card-header card-header-tabs card-header-primary">
+                  <div class="nav-tabs-navigation">
+                    <div class="nav-tabs-wrapper">
+                      <span class="nav-tabs-title">More:</span>
+                      <ul class="nav nav-tabs" data-tabs="tabs">
+                        <li class="nav-item">
+                          <a class="nav-link active" href="#profile" data-toggle="tab">
+                            <i class="material-icons">bug_report</i> Defects
+                            <div class="ripple-container"></div>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="#messages" data-toggle="tab">
+                            <i class="material-icons">code</i> Work Request
+                            <div class="ripple-container"></div>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="#settings" data-toggle="tab">
+                            <i class="material-icons">tab</i> Risks
+                            <div class="ripple-container"></div>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="#settings" data-toggle="tab">
+                            <i class="material-icons">support</i> Issues
+                            <div class="ripple-container"></div>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="profile">
+                      <table class="table">
+                        <tbody>
+                          <tr>
+                            <td>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input class="form-check-input" type="checkbox" value="" checked>
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                </label>
+                              </div>
+                            </td>
+                            <td>Sign contract for "What are conference organizers afraid of?"</td>
+
+                          </tr>
+                          <tr>
+                            <td>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input class="form-check-input" type="checkbox" value="">
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                </label>
+                              </div>
+                            </td>
+                            <td>Lines From Great Russian Literature? Or E-mails From My Boss?</td>
+                            <td class="td-actions text-right">
+                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
+                                <i class="material-icons">edit</i>
+                              </button>
+                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+                                <i class="material-icons">close</i>
+                              </button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input class="form-check-input" type="checkbox" value="">
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                </label>
+                              </div>
+                            </td>
+                            <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
+                            </td>
+                            <td class="td-actions text-right">
+                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
+                                <i class="material-icons">edit</i>
+                              </button>
+                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+                                <i class="material-icons">close</i>
+                              </button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input class="form-check-input" type="checkbox" value="" checked>
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                </label>
+                              </div>
+                            </td>
+                            <td>hello </td>
+                            <td class="td-actions text-right">
+                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
+                                <i class="material-icons">edit</i>
+                              </button>
+                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+                                <i class="material-icons">close</i>
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="tab-pane" id="messages">
+                      <table class="table">
+                        <tbody>
+                          <tr>
+                            <td>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input class="form-check-input" type="checkbox" value="" checked>
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                </label>
+                              </div>
+                            </td>
+                            <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
+                            </td>
+                            <td class="td-actions text-right">
+                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
+                                <i class="material-icons">edit</i>
+                              </button>
+                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+                                <i class="material-icons">close</i>
+                              </button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input class="form-check-input" type="checkbox" value="">
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                </label>
+                              </div>
+                            </td>
+                            <td>Sign contract for "What are conference organizers afraid of?"</td>
+                            <td class="td-actions text-right">
+                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
+                                <i class="material-icons">edit</i>
+                              </button>
+                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+                                <i class="material-icons">close</i>
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="tab-pane" id="settings">
+                      <table class="table">
+                        <tbody>
+                          <tr>
+                            <td>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input class="form-check-input" type="checkbox" value="">
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                </label>
+                              </div>
+                            </td>
+                            <td>Lines From Great Russian Literature? Or E-mails From My Boss?</td>
+                            <td class="td-actions text-right">
+                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
+                                <i class="material-icons">edit</i>
+                              </button>
+                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+                                <i class="material-icons">close</i>
+                              </button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input class="form-check-input" type="checkbox" value="" checked>
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                </label>
+                              </div>
+                            </td>
+                            <td>Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit
+                            </td>
+                            <td class="td-actions text-right">
+                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
+                                <i class="material-icons">edit</i>
+                              </button>
+                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+                                <i class="material-icons">close</i>
+                              </button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input class="form-check-input" type="checkbox" value="" checked>
+                                  <span class="form-check-sign">
+                                    <span class="check"></span>
+                                  </span>
+                                </label>
+                              </div>
+                            </td>
+                            <td>Sign contract for "What are conference organizers afraid of?"</td>
+                            <td class="td-actions text-right">
+                              <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
+                                <i class="material-icons">edit</i>
+                              </button>
+                              <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+                                <i class="material-icons">close</i>
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+              <div class="card">
+                <div class="card-header card-header-warning">
+                  <h4 class="card-title">Employees Stats</h4>
+                  <p class="card-category">New employees on 15th September, 2016</p>
+                </div>
+                <div class="card-body table-responsive">
+                  <table class="table table-hover">
+                    <thead class="text-warning">
+                      <th>ID</th>
+                      <th>Name</th>
+                      <th>Salary</th>
+                      <th>Country</th>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1</td>
+                        <td>Dakota Rice</td>
+                        <td>$36,738</td>
+                        <td>Niger</td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>Minerva Hooper</td>
+                        <td>$23,789</td>
+                        <td>Curaçao</td>
+                      </tr>
+                      <tr>
+                        <td>3</td>
+                        <td>Sage Rodriguez</td>
+                        <td>$56,142</td>
+                        <td>Netherlands</td>
+                      </tr>
+                      <tr>
+                        <td>4</td>
+                        <td>Philip Chaney</td>
+                        <td>$38,735</td>
+                        <td>Korea, South</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+{% endblock content %}
+
+
+
+
