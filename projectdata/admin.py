@@ -8,6 +8,7 @@ from .models import Trend
 from .models import Projectstatus
 from .models import Testphase
 from .models import Notification
+from .models import UserProject
 # Register your models here.
 admin.site.site_header = 'Aj Dashboard'
 
@@ -19,3 +20,4 @@ admin.site.register(Trend)
 admin.site.register(Projectstatus)
 admin.site.register(Testphase)
 admin.site.register(Notification)
+admin.site.register(UserProject)

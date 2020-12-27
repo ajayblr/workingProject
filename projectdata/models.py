@@ -95,3 +95,11 @@ class Notification(models.Model):
 
     def __str__(self):
         return self.notification_description
+
+class UserProject(models.Model):
+    user_name = models.ForeignKey(User, on_delete=models.CASCADE)
+    project_name = models.ForeignKey(Project, on_delete=models.CASCADE)
+    text_comments = models.CharField(max_length=4)
+
+    def __str__(self):
+        return self.text_comments

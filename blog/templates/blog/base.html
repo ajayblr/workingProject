@@ -18,7 +18,7 @@
     <!-- Bootstrap CSS --copied fromweb1 -->
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
-    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+
       <!-- CSS Just for demo purpose, don't include it in your project -->
 
    <!-- Bootstrap CSS --copied fromweb1 end -->
@@ -45,16 +45,14 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
-                    {% for val in projlist %}
-                          <a class="dropdown-item" href="{% url 'dashboard-home' %}">{{ val }}</a>
+                    {% for val in projaccess %}
+                          <a class="dropdown-item" href="{% url 'dashboard-home' %}{{val}}">{{ val}}</a>
                       {% endfor %}
-
-                <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Something else here</a>
                 </div>
               </li>
               <a class="nav-item nav-link" href="{% url 'blog-home' %}">Messages</a>
               <a class="nav-item nav-link" href="{% url 'about-page' %}">About Me</a>
+              <a class="nav-item nav-link" href="{% url 'index' %}">Manage Data</a>
             {% else %}
                 <a class="nav-item nav-link" href="{% url 'home-page' %}">Home</a>
 
@@ -79,6 +77,8 @@
 
                 <li class="nav-item dropdown">
                    <a class="nav-link" href="javascript:;" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                       <!--img class="rounded-circle account-img" src="{{user.profile.image.url}}"-->
+
                       <i class="material-icons">person</i>
                       <p class="d-lg-none d-md-block">
                         Account

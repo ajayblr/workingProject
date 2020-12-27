@@ -1,5 +1,6 @@
 {% extends "blog/base.html" %}
 {% block content %}
+  <div class="container">
     <h1 class="mb-3" >Posts by {{ view.kwargs.username}} ({{ page_obj.paginator.count }})</h1>
     {% for post in posts %}
           <article class="media content-section">
@@ -36,5 +37,5 @@
         {% endif %}
 
     {% endif %}
-
+  </div>
 {% endblock content %}

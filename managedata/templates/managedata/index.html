@@ -1,0 +1,198 @@
+{% extends "blog/base.html" %}
+{% block content %}
+<div class="container">
+    {% if user.is_authenticated %}
+    <div class="col-lg-12 col-md-12">
+         <div class="nav-tabs-navigation">
+             <div class="nav-tabs-wrapper">
+                 <ul class="nav nav-pills nav-justified">
+                     <li class="nav-item">
+                          <a class="nav-link active" href="#Testpreparation" data-toggle="tab">
+                          <i class="material-icons">code</i> Status
+                            <div class="ripple-container"></div>
+                          </a>
+                        </li>
+                     <li class="nav-item">
+                          <a class="nav-link" href="#defects" data-toggle="tab">
+                            <i class="material-icons">bug_report</i> Defects
+                            <div class="ripple-container"></div>
+                          </a>
+                     </li>
+                     <li class="nav-item">
+                          <a class="nav-link" href="#trend" data-toggle="tab">
+                            <i class="material-icons">trending_up</i> Trend
+                            <div class="ripple-container"></div>
+                          </a>
+                     </li>
+                     <li class="nav-item">
+                          <a class="nav-link" href="#progress" data-toggle="tab">
+                            <i class="material-icons">sync</i> Execution Progress
+                            <div class="ripple-container"></div>
+                          </a>
+                     </li>
+                 </ul>
+             </div>
+         </div>
+    </div>
+
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="Testpreparation">
+                        <div class="col-lg-12 col-md-12">
+                            <div class="card">
+                                <div class="card-header card-header-warning">
+                                  <h4 class="card-title">Project Status</h4>
+                                  <a class="btn btn-primary btn-sm btn-block" href="{% url 'create_status' %}">Create Status</a>
+                                </div>
+                            <div class="card-body table-responsive">
+                            <table class="table table-bordered table-hover">
+				            	<thead class="text-warning">
+            						<th>#</th>
+                                    <th>Project</th>
+                                    <th>Test Phase</th>
+                                    <th scope="col" class="d-none d-sm-table-cell">Status</th>
+                                    <th>Update</th>
+                                    <th>Remove</th>
+                                </thead>
+                                <tbody>
+                                {% for  status in statusobj %}
+                                    <tr>
+                                        <td>{{ forloop.counter }} </td>
+                                        <td><a class = "mr-2" href="#">{{status.project_name}} </a></td>
+                                        <td>{{ status.test_phase}}</td>
+                                        <td scope="col" class="d-none d-sm-table-cell">{{status.completion_status}}%</td>
+                                        <td><center><a class="btn btn-outline-info" href="{% url 'update_status' status.id %}"><i class="material-icons">edit</i></a></center></td>
+                                        <td><center> <a class="btn btn-outline-info" href="{% url 'delete_status' status.id %}"><i class="material-icons">delete_forever</i></a></center></td>
+                                    </tr>
+                                </tbody>
+                                {% endfor %}
+                            </table>
+                            </div>
+                         </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="defects">
+			            <div class="col-lg-12 col-md-12">
+                             <div class="card">
+                                <div class="card-header card-header-warning">
+                                  <h4 class="card-title">Defects</h4>
+                                  <a class="btn btn-primary btn-sm btn-block" href="{% url 'create_defect' %}">Create Defect</a>
+                                </div>
+                                 <div class="card-body table-responsive">
+                                 <table class="table table-bordered table-hover">
+						            <thead class="text-warning">
+			            				<th>#</th>
+                                         <th>Project</th>
+                                         <th>Test Phase</th>
+                                         <th scope="col" class="d-none d-sm-table-cell">Assigned To Fix</th>
+                                         <th scope="col" class="d-none d-sm-table-cell">In Progress</th>
+                                         <th scope="col" class="d-none d-sm-table-cell">Feedback Required</th>
+                                         <th>Update</th>
+                                         <th>Remove</th>
+                                   </thead>
+                                   <tbody>
+                                      {% for  defect in obj %}
+                                           <tr>
+                                              <td>{{ forloop.counter }} </td>
+                                               <td><a class = "mr-2" href="#">{{defect.project_name}} </a></td>
+                                               <td>{{ defect.project_phase}}</td>
+                                               <td scope="col" class="d-none d-sm-table-cell">{{ defect.assigned_to_fix}}</td>
+                                               <td scope="col" class="d-none d-sm-table-cell">{{ defect.in_progress}}</td>
+                                               <td scope="col" class="d-none d-sm-table-cell">{{ defect.feedback_required}}</td>
+                                               <td><center><a class="btn btn-outline-info" href="{% url 'update_defect' defect.id %}"><i class="material-icons">edit</i></a></center></td>
+                                               <td> <a class="btn btn-outline-info" href="{% url 'delete_defect' defect.id %}"><i class="material-icons">delete_forever</i></a></center></td>
+                                         </tr>
+                                      {% endfor %}
+                                  </tbody>
+                                </table>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="trend">
+			            <div class="col-lg-12 col-md-12">
+                             <div class="card">
+                                <div class="card-header card-header-warning">
+                                  <h4 class="card-title">Execution Trend</h4>
+                                  <a class="btn btn-primary btn-sm btn-block" href="{% url 'create_trend' %}">Create Trend</a>
+                                </div>
+                                 <div class="card-body table-responsive">
+                                 <table class="table table-bordered table-hover">
+						            <thead class="text-warning">
+			            				<th>#</th>
+                                         <th>Project</th>
+                                         <th>Test Phase</th>
+                                         <th scope="col" class="d-none d-sm-table-cell">Execution Day</th>
+                                         <th scope="col" class="d-none d-sm-table-cell">Passed</th>
+                                         <th scope="col" class="d-none d-sm-table-cell">Failed</th>
+                                         <th>Update</th>
+                                         <th>Remove</th>
+                                   </thead>
+                                   <tbody>
+                                      {% for  trend in trendobj %}
+                                           <tr>
+                                              <td>{{ forloop.counter }} </td>
+                                               <td><a class = "mr-2" href="#">{{trend.project_name}} </a></td>
+                                               <td>{{ trend.project_phase}}</td>
+                                               <td scope="col" class="d-none d-sm-table-cell">{{ trend.execution_day}}</td>
+                                               <td scope="col" class="d-none d-sm-table-cell">{{ trend.passed_tc}}</td>
+                                               <td scope="col" class="d-none d-sm-table-cell">{{ trend.failed_tc}}</td>
+                                               <td><center><a class="btn btn-outline-info" href="{% url 'update_trend' trend.id %}"><i class="material-icons">edit</i></a></center></td>
+                                               <td> <a class="btn btn-outline-info" href="{% url 'delete_trend' trend.id %}"><i class="material-icons">delete_forever</i></a></center></td>
+                                         </tr>
+                                      {% endfor %}
+                                  </tbody>
+                                </table>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="progress">
+ 			            <div class="col-lg-12 col-md-12">
+                             <div class="card">
+                                <div class="card-header card-header-warning">
+                                  <h4 class="card-title">Execution Progress</h4>
+                                  <a class="btn btn-primary btn-sm btn-block" href="{% url 'create_progress' %}">Create Execution Progress</a>
+                                </div>
+                                 <div class="card-body table-responsive">
+                                 <table class="table table-bordered table-hover">
+						            <thead class="text-warning">
+			            				<th>#</th>
+                                         <th>Project</th>
+                                         <th>Test Phase</th>
+                                         <th scope="col" class="d-none d-sm-table-cell">Executed</th>
+                                         <th scope="col" class="d-none d-sm-table-cell">Passed</th>
+                                         <th scope="col" class="d-none d-sm-table-cell">Failed</th>
+                                         <th>Update</th>
+                                         <th>Remove</th>
+                                   </thead>
+                                   <tbody>
+                                      {% for  progress in progressobj %}
+                                           <tr>
+                                              <td>{{ forloop.counter }} </td>
+                                               <td><a class = "mr-2" href="#">{{progress.project_name}} </a></td>
+                                               <td>{{ progress.project_phase}}</td>
+                                               <td scope="col" class="d-none d-sm-table-cell">{{ progress.executed_tc}}</td>
+                                               <td scope="col" class="d-none d-sm-table-cell">{{ progress.passed_tc}}</td>
+                                               <td scope="col" class="d-none d-sm-table-cell">{{ progress.failed_tc}}</td>
+                                               <td><center><a class="btn btn-outline-info" href="{% url 'update_progress' progress.id %}"><i class="material-icons">edit</i></a></center></td>
+                                               <td> <a class="btn btn-outline-info" href="{% url 'delete_progress' progress.id %}"><i class="material-icons">delete_forever</i></a></center></td>
+                                         </tr>
+                                      {% endfor %}
+                                  </tbody>
+                                </table>
+                                </div>
+                             </div>
+                        </div>
+                  </div>
+
+    {% else %}
+          <h2>you have not logged in</h2>
+          <div class="border-top pt-3">
+                <small class="text-muted">
+                 Already Have An Account? <a  href="{% url 'login'%}">Log In Again</a>
+              </small>
+          </div>
+    {% endif %}
+
+    </div>
+{% endblock content %}

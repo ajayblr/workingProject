@@ -2,9 +2,9 @@
 {% extends 'blog/base.html' %}
 <script>
 {% block jquery %}
-    var endpoint = 'api/chart/data/'
+    var endpoint = '../api/chart/data/'
     var labels = []
-    var defaultData = []
+    var stdefectData = []
     var stprepdata
     var sitprepdata
     var uatprepdata
@@ -20,12 +20,15 @@
 
         success: function (data) {
             labels = data.defectlabels
-            defaultData = data.defectitems
+            stdefectData = data.stdefectitems
             stprepdata = data.stprepitems
             sitprepdata = data.sitprepitems
             uatprepdata = data.uatprepitems
             sttrendlabels = data.sttrenddatelabel
             sttrendData = data.sttrenditems
+
+            stexecdata = data.stexecitems
+
             sttrendbkcolor = ['rgb(14,74,219)', 'rgb(0,135,176)', 'rgb(0,176,18)', 'rgb(176,0,21)']
             trendlabel = ["Planned", "Executed", "Pass", "Fail"]
 
@@ -34,6 +37,7 @@
             uatprepChart()
             defectChart()
             stexectrendChart()
+            stexecChart()
             console.log(labels)
         },
         error: function (error_data) {
@@ -50,7 +54,7 @@
                     labels: labels,
                     datasets: [{
                     label: 'Defect status',
-                    data: defaultData,
+                    data: stdefectData,
 
                     backgroundColor: [
                     'rgba(217, 217, 217, 1)',
@@ -193,6 +197,34 @@
             })
     }
 
+
+    function stexecChart() {
+          var ctx = document.getElementById("myChartstexec");
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ["Test Execution","Yet to complete" ],
+                    datasets: [{
+                        data: stexecdata,
+                        backgroundColor: ['rgba(17,219,70)', 'rgba(31, 73, 125, 1)']
+                    }]
+                },
+                options: {
+                    title: {
+                        display: false,
+                        text: 'System Test Preparation'
+                    },
+                    legend: {
+                        display: false,
+                        labels: {
+                                 fontColor: 'rgba(255, 99, 132)'
+                        }
+                    }
+                }
+            })
+    }
+
+
     function stexectrendChart() {
         lineChartData = {};
         lineChartData.labels = sttrendlabels;
@@ -288,7 +320,7 @@
                 <div class="card-footer">
                   <div class="stats">
                     <p class="card-category">
-                      <span class="text-success"> {{stpercentage}}% </span> {% if stpercentage == 100 %} Complete {% else %} in-progres {% endif %}</p>
+                      <span class="text-success"> {{stpercentage}}% </span> {% if stpercentage == 0 %} Yet to Start {% elif stpercentage == 100 %} Complete {% else %} in-progres {% endif %}</p>
                   </div>
                 </div>
               </div>
@@ -305,7 +337,8 @@
                 <div class="card-footer">
                   <div class="stats">
                     <p class="card-category">
-                    <span class="text-success"> {{sitpercentage}}% </span> {% if sitpercentage == 100 %} Complete {% else %} in-progres {% endif %}</p>
+                    <!--span class="text-success"> {{sitpercentage}}% </span> {% if sitpercentage == 100 %} Complete {% else %} in-progres {% endif %}</p-->
+                     <span class="text-success"> {{sitpercentage}}% </span> {% if sitpercentage == 0 %} Yet to Start {% elif sitpercentage == 100 %} Complete {% else %} in-progres {% endif %}</p>
                   </div>
                 </div>
               </div>
@@ -321,13 +354,50 @@
                 </div>
                 <div class="card-footer">
                   <div class="stats">
-                      <span class="text-success"> {{uatpercentage}}% </span> {% if uatpercentage == 100 %} Complete {% else %} in-progres {% endif %}</p>
+                     <span class="text-success"> {{uatpercentage}}% </span> {% if uatpercentage == 0 %} Yet to Start {% elif uatpercentage == 100 %} Complete {% else %} in-progres {% endif %}</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
           <br>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card card-chart">
+                <div class="card-header">
+                  <canvas id="stexecprogressChart"></canvas>
+                </div>
+                <div class="card-body">
+                  <h4 class="card-title">System Test Execution Progress</h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card card-chart">
+                <div class="card-header bg-success">
+                  <h6 class="card-title">System Test Execution Status</h6>
+                </div>
+                <div class="card-body">
+
+                  <canvas id="myChartstexec" ></canvas>
+                </div>
+
+                <div class="card-footer">
+                  <div class="stats">
+                    <p class="card-category">
+                    <!--span class="text-success"> {{sitpercentage}}% </span> {% if sitpercentage == 100 %} Complete {% else %} in-progres {% endif %}</p-->
+                     <span class="text-success"> {{sitpercentage}}% </span> {% if sitpercentage == 0 %} Yet to Start {% elif sitpercentage == 100 %} Complete {% else %} in-progres {% endif %}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <br>
+
+
           <div class="row">
             <div class="col-md-6">
               <div class="card card-chart">
@@ -347,11 +417,16 @@
                 <div class="card-body">
                   <h4 class="card-title">System Test Execution Trend</h4>
                 </div>
-
               </div>
             </div>
           </div>
+
           <br>
+
+
+
+          <br>
+
           <div class="row">
             <div class="col-lg-6 col-md-12">
               <div class="card">

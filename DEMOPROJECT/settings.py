@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'DEMOAPP.apps.DemoappConfig',
     'blog.apps.BlogConfig',
+    'managedata.apps.ManagedataConfig',
     'projectdata.apps.ProjectdataConfig',
     'users.apps.UsersConfig',
     'crispy_forms',
@@ -56,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_globals.middleware.Global',
 ]
 
 ROOT_URLCONF = 'DEMOPROJECT.urls'

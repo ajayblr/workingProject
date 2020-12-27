@@ -37,6 +37,7 @@ urlpatterns = [
          name='password_reset_complete'),
     path('', include('DEMOAPP.urls')),
     path('blog/', include('blog.urls')),
+    path('managedata/', include('managedata.urls')),
     path('projectdata/', include('projectdata.urls')),
 
 ]
