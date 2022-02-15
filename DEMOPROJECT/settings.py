@@ -16,8 +16,6 @@ import os
 from django.template.context_processors import media
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -27,7 +25,7 @@ SECRET_KEY = '#6u@3vc)lm5fa_1x36nc^()pht*k@w3y%bd!3po6ij36d-_76_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ec2-54-204-206-113.compute-1.amazonaws.com']
+ALLOWED_HOSTS = ['ec2-54-204-206-113.compute-1.amazonaws.com', '54.204.206.113']
 
 
 # Application definition
